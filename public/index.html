@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>React App</title>
+    <style>
+     html, body{
+       height: 100%;
+       width: 100%;
+     }
+    </style>
+    <script>
+      function initGMap() {
+        // let google = window.google;
+        // Dispatch/Trigger/Fire the event
+        var event = new CustomEvent("gmap-loaded", google);
+        document.dispatchEvent(event);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root" style="flex: 1; flex-direction: column; display: flex; height: 100%"></div>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPS5H7TVAIcNOvpUx-IQtpVd3V0xFUfGU&callback=initGMap"></script>
+  </body>
+</html>
