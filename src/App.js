@@ -31,15 +31,19 @@ class App extends Component {
     });
   }
 
-  markerHandler = (fav, item) => {
+  markerHandler = (fav, item, marker) => {
     let { favoriteStores } = this.state;
     if(fav) {
-      favoriteStores.push(item)
+      favoriteStores.push({ ...item, marker })
     } else {
       favoriteStores = favoriteStores.filter(i => (i.Name !== item.Name));
     }
     this.setState({favoriteStores});
   }
+
+  removeFromFavorite = (marker, item) => {
+    mapsClass.handleMarkerClick(marker, item, this.markerHandler);
+  };
 
   render() {
     return (
@@ -49,7 +53,7 @@ class App extends Component {
             <div style={{flex: 10}}>
               Below is the list of your favorite stores
               <ul>
-                {this.state.favoriteStores.map((store, index) => <li key={index}>{store.Name}</li>)}
+                {this.state.favoriteStores.map((store, index) => <li key={index}>{store.Name}  &nbsp;&nbsp;<span onClick={e => this.removeFromFavorite(store.marker, store)} style={{color: 'red', cursor: 'pointer'}}><b>x</b></span></li>)}
               </ul>
             </div>
           : ''}

@@ -1,11 +1,25 @@
 import * as storeDetails from '../../store_directory.json';
 
+const googleDefaultIcon = "http://maps.google.com/mapfiles/kml/paddle/red-circle.png";
+const favoriteStoreIcon = "https://cdn2.iconfinder.com/data/icons/social-buttons-2/512/memori-24.png";
+
+export function handleMarkerClick(marker, item, markerHandler) {
+  if(marker.customInfo === 'favorite') {
+    marker.customInfo = '';
+    marker.setIcon(googleDefaultIcon);
+  } else {
+    marker.customInfo = 'favorite';
+    marker.setIcon(favoriteStoreIcon);
+  }
+  if(markerHandler) {
+    markerHandler(marker.customInfo, item, marker);
+  }
+};
+
 export function decodeAddress(item, map, google, failedDecodings, markerHandler) {
   return new Promise(function(res, rej){
     setTimeout(function(){
       let geocoder = new google.maps.Geocoder();
-      let googleDefaultIcon = "http://maps.google.com/mapfiles/kml/paddle/red-circle.png";
-      let favoriteStoreIcon = "https://cdn2.iconfinder.com/data/icons/social-buttons-2/512/memori-24.png";
       geocoder.geocode( { 'address': item.Address}, function(results, status) {
         if (status === 'OK') {
           let marker = new google.maps.Marker({
@@ -15,17 +29,8 @@ export function decodeAddress(item, map, google, failedDecodings, markerHandler)
               icon: googleDefaultIcon
           });
           map.setCenter(results[0].geometry.location);
-          google.maps.event.addListener(marker, 'click', function() {
-            if(this.customInfo === 'favorite') {
-              this.customInfo = '';
-              marker.setIcon(googleDefaultIcon);
-            } else {
-              this.customInfo = 'favorite';
-              marker.setIcon(favoriteStoreIcon);
-            }
-            if(markerHandler) {
-              markerHandler(this.customInfo, item);
-            }
+          google.maps.event.addListener(marker, 'click', () => {
+            handleMarkerClick(marker, item, markerHandler)
           });
         } else {
           item.status = status
